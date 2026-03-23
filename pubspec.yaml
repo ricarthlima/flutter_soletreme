@@ -23,6 +23,7 @@ dependencies:
   freezed_annotation: ^3.1.0
   json_annotation: ^4.11.0
   secure_shared_preferences: ^0.0.4
+  get_it: ^9.2.1
 
 dev_dependencies:
   flutter_test:
