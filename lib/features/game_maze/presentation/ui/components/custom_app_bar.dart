@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/initial_bindings.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../../stores/game_store.dart';
+import '../dialogs/first_time_dialog.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -25,7 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: const Icon(Icons.help, size: 16),
         onPressed: () {
-          // TODO: showFirstTimeDialog(context);
+          showFirstTimeDialog(context);
         },
       ),
       actions: [
@@ -38,7 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Image.asset("assets/twitter-white.png"),
+            child: Image.asset("assets/images/twitter-white.png"),
           ),
         ),
         Observer(

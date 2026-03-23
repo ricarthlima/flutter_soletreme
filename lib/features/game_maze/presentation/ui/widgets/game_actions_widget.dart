@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import '../../../../../core/initial_bindings.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../../stores/game_store.dart';
+import '../dialogs/win_dialog.dart';
 
 class GameActionsWidget extends StatelessWidget {
   const GameActionsWidget({super.key});
@@ -30,7 +31,7 @@ class GameActionsWidget extends StatelessWidget {
             InkWell(
               onTap: isWinned
                   ? () {
-                      //TODO: showWinDialog(context);
+                      showWinDialog(context);
                     }
                   : null,
               child: Container(

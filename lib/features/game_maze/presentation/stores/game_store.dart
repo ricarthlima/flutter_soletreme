@@ -45,7 +45,7 @@ abstract class _GameStoreBase with Store {
   List<String> listWordsNormalized = [];
   List<String> listWordsWellWrote = [];
 
-  // COMPUTEDS
+  // COMPUTED
 
   /// Transforma a lista plana de palavras salvas no formato que a UI precisa separar por tamanho
   @computed
@@ -91,6 +91,82 @@ abstract class _GameStoreBase with Store {
         cat["7"]!.isNotEmpty;
   }
 
+  @computed
+  List<GameEntity> get wonGames {
+    return prefsEntity.listGamesPlayed.where((game) {
+      bool has3 = false, has4 = false, has5 = false, has6 = false, has7 = false;
+      for (var w in game.listWordsFound) {
+        if (w.length == 3) has3 = true;
+        if (w.length == 4) has4 = true;
+        if (w.length == 5) has5 = true;
+        if (w.length == 6) has6 = true;
+        if (w.length >= 7) has7 = true;
+      }
+      return has3 && has4 && has5 && has6 && has7;
+    }).toList();
+  }
+
+  /// Total de Vitórias na vida da jogadora
+  @computed
+  int get totalVictories => wonGames.length;
+
+  /// Soma de todas as palavras encontradas em todos os jogos
+  @computed
+  int get totalWordsAllTime {
+    return prefsEntity.listGamesPlayed.fold(
+      0,
+      (sum, game) => sum + game.listWordsFound.length,
+    );
+  }
+
+  /// Varre todo o histórico para achar a palavra mais longa já feita
+  @computed
+  String get biggestWordAllTime {
+    String biggest = "";
+    for (var game in prefsEntity.listGamesPlayed) {
+      for (var word in game.listWordsFound) {
+        if (word.length > biggest.length) biggest = word;
+      }
+    }
+    return biggest;
+  }
+
+  /// Calcula a sequência ininterrupta de dias com vitória
+  @computed
+  int get winStreak {
+    if (wonGames.isEmpty) return 0;
+
+    // Pega as datas de vitória e ordena da mais recente para a mais antiga
+    final List<DateTime> dates = wonGames.map((g) => g.maze.date).toList();
+    dates.sort((a, b) => b.compareTo(a));
+
+    int streak = 1;
+    for (int i = 0; i < dates.length - 1; i++) {
+      // Truque de mestre: recria o DateTime apenas com Ano, Mês e Dia (zera as horas)
+      final DateTime current = DateTime(
+        dates[i].year,
+        dates[i].month,
+        dates[i].day,
+      );
+      final DateTime previous = DateTime(
+        dates[i + 1].year,
+        dates[i + 1].month,
+        dates[i + 1].day,
+      );
+
+      final int diffInDays = current.difference(previous).inDays;
+
+      if (diffInDays == 1) {
+        streak++; // Jogou em dias seguidos
+      } else if (diffInDays == 0) {
+        continue; // Jogou a mesma fase no mesmo dia (ignora para a contagem)
+      } else {
+        break; // Buraco de mais de 1 dia, quebrou a sequência
+      }
+    }
+    return streak;
+  }
+
   // ACTIONS
 
   /// Carrega as informações iniciais
@@ -131,38 +207,40 @@ abstract class _GameStoreBase with Store {
   Future<void> _loadOrCreateTodayGame() async {
     loadingText = "Baixando tabuleiro...";
 
-    // TODO: Buscar da API o Maze de hoje
-    // Remover esse de exemplo
+    final now = DateTime.now();
+    // Identificador único do dia: Ano-Mês-Dia (ex: "2026-03-23")
+    // Isso garante que cada dia seja único e vire exatamente à meia-noite.
+    final String todayId =
+        "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+
+    // TODO: Buscar da API ou CSV o Maze correspondente a essa data.
+    // Exemplo temporário:
     final MazeEntity todayMaze = MazeEntity(
-      id: "123",
+      id: todayId,
       maze: "lrarrirnabuvidoaocigaafsatbmotoaagbeerig",
-      date: DateTime.now(),
+      date: now,
     );
 
-    // Procura na lista de jogos salvos se já jogamos o de hoje
+    // Procura na lista se já tem um jogo salvo com o ID de hoje
     final int index = prefsEntity.listGamesPlayed.indexWhere(
       (g) => g.id == todayMaze.id,
     );
 
     if (index != -1) {
-      // Já existe, carrega o progresso!
       currentGame = prefsEntity.listGamesPlayed[index];
     } else {
-      // É a primeira vez jogando hoje. Cria um novo GameEntity zerado.
       currentGame = GameEntity(
         id: todayMaze.id,
         maze: todayMaze,
         listWordsFound: [],
       );
 
-      // Salva o novo jogo na lista de preferências
       final updatedList = List<GameEntity>.from(prefsEntity.listGamesPlayed)
         ..add(currentGame!);
       prefsEntity = prefsEntity.copyWith(listGamesPlayed: updatedList);
       await _prefsRepo.save(prefsEntity);
     }
 
-    // Prepara o grid de cliques
     gridClicked.clear();
     todayMaze.maze.split('').forEach((_) => gridClicked.add(false));
   }
@@ -266,5 +344,24 @@ abstract class _GameStoreBase with Store {
   void setFirstTimeMessageShowed() {
     prefsEntity = prefsEntity.copyWith(isShowedFirstTimeMessage: true);
     _prefsRepo.save(prefsEntity);
+  }
+
+  @action
+  String generateShareText() {
+    if (currentGame == null) return "";
+
+    final int totalFounds = currentGame!.listWordsFound.length;
+    final String mazeId = currentGame!.maze.id;
+
+    // Aqui você chama a sua função helper passando as palavras que ela encontrou hoje
+    // String emojis = listToEmoji(currentGame!.listWordsFound, listWordsWellWrote);
+
+    String copyText =
+        "venci no soletre.me #$mazeId | 🔤 $totalFounds | ❤️‍🔥 $winStreak";
+
+    // copyText += "\n$emojis";
+    copyText += "\n#soletreme";
+
+    return copyText;
   }
 }

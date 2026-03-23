@@ -10,6 +10,8 @@ import '../stores/game_store.dart';
 
 // Importe os seus novos widgets fatiados
 import 'components/custom_app_bar.dart';
+import 'dialogs/first_time_dialog.dart';
+import 'dialogs/win_dialog.dart';
 import 'widgets/game_grid_widget.dart';
 import 'widgets/current_word_widget.dart';
 import 'widgets/game_actions_widget.dart';
@@ -39,7 +41,7 @@ class _GameScreenState extends State<GameScreen> {
     _disposers = [
       reaction((_) => store.isWinned, (bool won) {
         if (won && mounted) {
-          // TODO: showWinDialog(context);
+          showWinDialog(context);
         }
       }),
     ];
@@ -57,12 +59,12 @@ class _GameScreenState extends State<GameScreen> {
     if (!mounted) return;
 
     if (!store.prefsEntity.isShowedFirstTimeMessage) {
-      // TODO: showFirstTimeDialog(context);
+      showFirstTimeDialog(context);
       store.setFirstTimeMessageShowed();
     }
 
     if (store.isWinned) {
-      // TODO: showWinDialog(context);
+      showWinDialog(context);
     }
   }
 
