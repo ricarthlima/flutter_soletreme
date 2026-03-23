@@ -19,14 +19,11 @@ class GameActionsWidget extends StatelessWidget {
         final isWinned = store.isWinned;
 
         return Column(
+          spacing: 16,
           children: [
             IconButton(
               onPressed: store.clearCurrentPlay,
               icon: const Icon(Icons.delete, color: AppColors.border),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Divider(color: AppColors.darkBackground),
             ),
             InkWell(
               onTap: isWinned

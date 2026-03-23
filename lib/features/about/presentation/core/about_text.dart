@@ -21,6 +21,6 @@ O *soletre.me* não utiliza cookies e não faz nenhum tipo de tracking.
 
 ---
 
-Copyright © 2025 Ricarth Lima.  
+Copyright © 2026 Ricarth Lima.  
 Todos os direitos reservados.
 """;

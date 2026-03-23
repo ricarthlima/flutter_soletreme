@@ -26,7 +26,7 @@ class GameFooterWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         const Text(
-          "soletre.me - ricarth lima - risoflorais studio @ 2023",
+          "soletre.me - ricarth lima @ 2026",
           style: TextStyle(
             fontFamily: "Lora",
             color: AppColors.darkBackground,

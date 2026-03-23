@@ -24,28 +24,36 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColors.darkBackground,
       elevation: 0,
       toolbarHeight: 48,
-      leading: IconButton(
-        icon: const Icon(Icons.help, size: 16),
-        onPressed: () {
-          showFirstTimeDialog(context);
-        },
-      ),
+      leading: const SizedBox(),
       actions: [
-        InkWell(
-          onTap: () {
-            launchUrl(
-              Uri.parse("https://twitter.com/soletreme"),
-              mode: LaunchMode.externalApplication,
-            );
+        IconButton(
+          icon: const Icon(Icons.help, size: 16),
+          tooltip: "Como jogar?",
+          onPressed: () {
+            showFirstTimeDialog(context);
           },
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Image.asset("assets/images/twitter-white.png"),
+        ),
+        Tooltip(
+          message: "Siga-nos no twitter!",
+          child: InkWell(
+            onTap: () {
+              launchUrl(
+                Uri.parse("https://twitter.com/soletreme"),
+                mode: LaunchMode.externalApplication,
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Image.asset("assets/images/twitter-white.png"),
+            ),
           ),
         ),
         Observer(
           builder: (_) => IconButton(
             onPressed: store.toggleSound,
+            tooltip: store.prefsEntity.isSoundActive
+                ? "Ativar som"
+                : "Desativar som",
             icon: Icon(
               store.prefsEntity.isSoundActive
                   ? Icons.music_note_sharp
@@ -58,6 +66,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             showAboutSoletreMeDialog(context);
           },
+          tooltip: "Sobre soletre.me",
           icon: const Icon(Icons.info, size: 16),
         ),
       ],

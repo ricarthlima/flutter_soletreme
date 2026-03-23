@@ -26,11 +26,22 @@ class ResultsTableWidget extends StatelessWidget {
           children: [
             const TableRow(
               children: [
-                Text("Palavras Encontradas", textAlign: TextAlign.center),
-                Text("Conquistas Diárias", textAlign: TextAlign.center),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 24.0),
+                  child: Text(
+                    "Palavras Encontradas",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 24.0),
+                  child: Text(
+                    "Conquistas Diárias",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ],
             ),
-            const TableRow(children: [Text(""), Text("")]),
             TableRow(
               children: [
                 Column(

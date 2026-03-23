@@ -8,7 +8,6 @@ import '../../../../core/initial_bindings.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../stores/game_store.dart';
 
-// Importe os seus novos widgets fatiados
 import 'components/custom_app_bar.dart';
 import 'dialogs/first_time_dialog.dart';
 import 'dialogs/win_dialog.dart';
@@ -70,11 +69,8 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // O Observer aqui fora só serve para escutar a mudança do isLoaded
-    // e alternar entre a tela de carregamento e o jogo em si.
     return Observer(
       builder: (_) {
-        // Tela de Loading
         if (!store.isLoaded) {
           return Scaffold(
             backgroundColor: AppColors.background,
@@ -94,32 +90,39 @@ class _GameScreenState extends State<GameScreen> {
           );
         }
 
-        // Tela do Jogo
         return Scaffold(
           appBar: const CustomAppBar(),
           backgroundColor: AppColors.background,
-          body: SingleChildScrollView(
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 16,
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              return ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 32,
+                      horizontal: 16,
+                    ),
+                    width: min(700, MediaQuery.of(context).size.width * 0.95),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      spacing: 16,
+                      children: [
+                        ResultsTableWidget(),
+
+                        CurrentWordWidget(),
+
+                        GameGridWidget(),
+
+                        GameActionsWidget(),
+
+                        GameFooterWidget(),
+                      ],
+                    ),
+                  ),
                 ),
-                width: min(700, MediaQuery.of(context).size.width * 0.95),
-                child: const Column(
-                  children: [
-                    SizedBox(height: 16),
-                    GameGridWidget(),
-                    SizedBox(height: 16),
-                    CurrentWordWidget(),
-                    GameActionsWidget(),
-                    ResultsTableWidget(),
-                    SizedBox(height: 16),
-                    GameFooterWidget(),
-                  ],
-                ),
-              ),
-            ),
+              );
+            },
           ),
         );
       },
