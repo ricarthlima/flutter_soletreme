@@ -36,3 +36,17 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/data/
+    - assets/images/
+    - assets/sounds/
+    - icon.png
+
+  fonts: 
+    - family: RubikMonoOne
+      fonts:
+        - asset: fonts/RubikMonoOne-Regular.ttf    
+    - family: Lora
+      fonts:
+        - asset: fonts/Lora.ttf
