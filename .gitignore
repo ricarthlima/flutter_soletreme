@@ -1,45 +1,160 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
+# ====================================================
+# FLUTTER / DART
+# ====================================================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+.fvm/flutter_sdk
 
-# IntelliJ related
+# Evitar comitar pubspec.lock em pacotes (liberado para apps)
+#pubspec.lock
+
+# Diretórios de documentação gerada
+**/doc/api/
+
+# Build ID do Flutter iOS
+**/ios/Flutter/.last_build_id
+
+# Arquivos e scripts auxiliares
+/lib/_core/private/*
+/lib/_core/private/auth_user.dart
+/lib/estrutura.json
+/lib/dir_to_json.py
+
+# Arquivos de ambiente (.env)
+*.env
+*dotenv.env
+*dotenv
+
+# ====================================================
+# FLUTTERFIRE / FIREBASE
+# ====================================================
+**/android/app/google-services.json
+**/ios/Runner/GoogleService-Info.plist
+**/macos/Runner/GoogleService-Info.plist
+firebase.json
+firebase_app_id_file.json
+firebase_options.dart
+firebase_options_prod.dart
+firebase_options_dev.dart
+
+# ====================================================
+# ANDROID
+# ====================================================
+**/android/.gradle
+**/android/gradle-wrapper.jar
+**/android/gradlew
+**/android/gradlew.bat
+**/android/key.properties
+**/android/local.properties
+**/android/captures/
+**/android/**/GeneratedPluginRegistrant.java
+
+# Pastas de build por flavor
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Keystores e certificados
+*.keystore
+*.jks
+**/android/app/upload-keystore.jks
+
+# ====================================================
+# IOS / XCODE
+# ====================================================
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*.moved-aside
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/**/DerivedData/
+**/ios/**/Icon?
+**/ios/**/Pods/
+**/ios/**/.symlinks/
+**/ios/**/profile
+**/ios/**/xcuserdata
+**/ios/.generated/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Permitir arquivos padrão do Xcode
+!**/ios/**/default.mode1v3
+!**/ios/**/default.mode2v3
+!**/ios/**/default.pbxuser
+!**/ios/**/default.perspectivev3
+
+# Certificados Apple
+*.p8
+*.p12
+*.mobileprovision
+
+# ====================================================
+# IDEs e FERRAMENTAS
+# ====================================================
+
+# VSCode
+#.vscode/
+.vscode/launch.json
+
+# IntelliJ / Android Studio
 *.iml
 *.ipr
 *.iws
 .idea/
+.idea_modules/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Melos / CLI tooling
+.melos_tool/
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
+# Fastlane
+**/fastlane/*.env
+fastlane/.env
+**/fastlane/report.xml
+**/fastlane/Preview.html
 
-# Symbolication related
+# Codemagic
+.codemagic/
+
+# GitHub Actions
+.github/workflows/*.log
+
+# ====================================================
+# OBFUSCAÇÃO / SIMBOLICAÇÃO
+# ====================================================
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# ====================================================
+# OUTROS (gerais)
+# ====================================================
+*.class
+*.log
+*.pyc
+*.swp
+*.orig
+*.bak
+*.tmp
+
+# ====================================================
+# Arquivos gerados pelo build_runner (Freezed, MobX, etc)
+# ====================================================
+*.g.dart
+*.freezed.dart
