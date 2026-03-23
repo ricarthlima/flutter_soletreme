@@ -1,8 +1,9 @@
 import 'package:get_it/get_it.dart';
-import 'package:secure_shared_preferences/secure_shared_pref.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../features/game_maze/data/services/secure_shared_preferences/ssp_player_prefs_service.dart';
+import '../features/game_maze/data/services/shared_preferences/shared_preferences_player_prefs_service.dart';
 import '../features/game_maze/domain/repositories/player_prefs_repository.dart';
+import '../features/game_maze/presentation/stores/game_store.dart';
 
 abstract class DI {
   static late GetIt instance;
@@ -18,13 +19,19 @@ abstract class DI {
   }
 
   static Future<void> _registerCore() async {
-    final ssp = await SecureSharedPref.getInstance();
-    instance.registerLazySingleton<SecureSharedPref>(() => ssp);
+    final sharedPreferences = await SharedPreferences.getInstance();
+    instance.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
   }
 
   static void _registerGameMazeBindings() {
     instance.registerLazySingleton<PlayerPrefsRepository>(
-      () => SspPlayerPrefsService(ssp: instance<SecureSharedPref>()),
+      () => SharedPreferencesPlayerPrefsService(
+        sharedPreferences: instance<SharedPreferences>(),
+      ),
+    );
+
+    instance.registerLazySingleton<GameStore>(
+      () => GameStore(prefsRepo: instance<PlayerPrefsRepository>()),
     );
   }
 }

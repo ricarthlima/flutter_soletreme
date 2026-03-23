@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-import 'package:secure_shared_preferences/secure_shared_pref.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/entities/player_prefs_entity.dart';
 import '../../../domain/repositories/player_prefs_repository.dart';
 
-class SspPlayerPrefsService implements PlayerPrefsRepository {
-  SecureSharedPref ssp;
-  SspPlayerPrefsService({required this.ssp});
+class SharedPreferencesPlayerPrefsService implements PlayerPrefsRepository {
+  SharedPreferences sharedPreferences;
+  SharedPreferencesPlayerPrefsService({required this.sharedPreferences});
 
   final String _sspKey = "PLAYER_PREFS";
 
   @override
   Future<PlayerPrefsEntity> load() async {
-    final String? jsonString = await ssp.getString(_sspKey, isEncrypted: true);
+    final String? jsonString = sharedPreferences.getString(_sspKey);
 
     if (jsonString != null) {
       return PlayerPrefsEntity.fromJson(json.decode(jsonString));
@@ -24,6 +24,6 @@ class SspPlayerPrefsService implements PlayerPrefsRepository {
 
   @override
   Future<void> save(PlayerPrefsEntity playerPrefs) async {
-    return ssp.putString(_sspKey, json.encode(playerPrefs));
+    await sharedPreferences.setString(_sspKey, json.encode(playerPrefs));
   }
 }
