@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../core/initial_bindings.dart';
 import '../../domain/entities/game_entity.dart';
 import '../../domain/entities/maze_entity.dart';
 import '../../domain/entities/player_prefs_entity.dart';
@@ -9,10 +8,13 @@ import '../../domain/repositories/player_prefs_repository.dart';
 
 part 'game_store.g.dart'; ////
 
-class HomeStore = _HomeStoreBase with _$HomeStore;
+class GameStore = _GameStoreBase with _$GameStore;
 
-abstract class _HomeStoreBase with Store {
-  final PlayerPrefsRepository _prefsRepo = DI.instance<PlayerPrefsRepository>();
+abstract class _GameStoreBase with Store {
+  final PlayerPrefsRepository _prefsRepo;
+
+  _GameStoreBase({required PlayerPrefsRepository prefsRepo})
+    : _prefsRepo = prefsRepo;
 
   // OBSERVABLES
 
