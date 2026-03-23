@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/initial_bindings.dart';
 import '../../../../../shared/theme/app_colors.dart';
+import '../../../../about/presentation/ui/dialogs/about_dialog.dart';
 import '../../stores/game_store.dart';
 import '../dialogs/first_time_dialog.dart';
 
@@ -55,7 +56,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           onPressed: () {
-            //TODO: showAboutSoletremeDialog(context);
+            showAboutSoletreMeDialog(context);
           },
           icon: const Icon(Icons.info, size: 16),
         ),
