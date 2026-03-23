@@ -1,20 +1,25 @@
 import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../shared/audio/domain/repositories/audio_repository.dart';
 import '../../domain/entities/game_entity.dart';
 import '../../domain/entities/maze_entity.dart';
 import '../../domain/entities/player_prefs_entity.dart';
 import '../../domain/repositories/player_prefs_repository.dart';
 
-part 'game_store.g.dart'; ////
+part 'game_store.g.dart';
 
 class GameStore = _GameStoreBase with _$GameStore;
 
 abstract class _GameStoreBase with Store {
   final PlayerPrefsRepository _prefsRepo;
+  final AudioRepository _audioRepo;
 
-  _GameStoreBase({required PlayerPrefsRepository prefsRepo})
-    : _prefsRepo = prefsRepo;
+  _GameStoreBase({
+    required PlayerPrefsRepository prefsRepo,
+    required AudioRepository audioRepo,
+  }) : _prefsRepo = prefsRepo,
+       _audioRepo = audioRepo;
 
   // OBSERVABLES
 
@@ -271,6 +276,10 @@ abstract class _GameStoreBase with Store {
     }
 
     if (canClick) {
+      if (prefsEntity.isSoundActive) {
+        _audioRepo.playTouch();
+      }
+
       if (gridClicked[index]) {
         currentWord = currentWord.substring(0, currentWord.length - 1);
         listClickSequence.removeLast();
@@ -312,7 +321,15 @@ abstract class _GameStoreBase with Store {
 
         isShowingFound = true;
 
-        // TODO: Lógica de som aqui
+        final wasWinnedBefore = isWinned;
+
+        if (prefsEntity.isSoundActive) {
+          if (!wasWinnedBefore && isWinned) {
+            _audioRepo.playWin();
+          } else {
+            _audioRepo.playSuccess();
+          }
+        }
 
         Future.delayed(const Duration(milliseconds: 750)).then((_) {
           clearCurrentPlay();

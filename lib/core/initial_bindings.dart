@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../features/game_maze/data/services/shared_preferences/shared_preferences_player_prefs_service.dart';
 import '../features/game_maze/domain/repositories/player_prefs_repository.dart';
 import '../features/game_maze/presentation/stores/game_store.dart';
+import '../shared/audio/domain/data/services/just_audio/just_audio_service.dart';
+import '../shared/audio/domain/repositories/audio_repository.dart';
 
 abstract class DI {
   static late GetIt instance;
@@ -14,13 +16,17 @@ abstract class DI {
   }
 
   static Future<void> _register() async {
-    _registerCore();
+    await _registerCore();
     _registerGameMazeBindings();
   }
 
   static Future<void> _registerCore() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     instance.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+
+    final audioService = JustAudioService();
+    await audioService.init();
+    instance.registerSingleton<AudioRepository>(audioService);
   }
 
   static void _registerGameMazeBindings() {
@@ -31,7 +37,10 @@ abstract class DI {
     );
 
     instance.registerLazySingleton<GameStore>(
-      () => GameStore(prefsRepo: instance<PlayerPrefsRepository>()),
+      () => GameStore(
+        prefsRepo: instance<PlayerPrefsRepository>(),
+        audioRepo: instance<AudioRepository>(),
+      ),
     );
   }
 }
