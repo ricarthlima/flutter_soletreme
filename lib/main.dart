@@ -4,6 +4,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'core/initial_bindings.dart';
 import 'features/game_maze/presentation/ui/game_screen.dart';
+import 'features/privacy/presentation/ui/privacy_screen.dart';
 import 'shared/theme/app_colors.dart';
 
 void main() async {
@@ -37,9 +38,8 @@ class MainApp extends StatelessWidget {
           case "/":
             return MaterialPageRoute(builder: (_) => const GameScreen());
 
-          // TODO: Termos de privacidade
-          // case "/privacy":
-          //   return MaterialPageRoute(builder: (_) => const PrivacyPage());
+          case "/privacy":
+            return MaterialPageRoute(builder: (_) => const PrivacyScreen());
 
           default:
             return MaterialPageRoute(builder: (_) => const GameScreen());
