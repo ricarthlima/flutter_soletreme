@@ -5,6 +5,7 @@ import '../../../../shared/audio/domain/repositories/audio_repository.dart';
 import '../../domain/entities/game_entity.dart';
 import '../../domain/entities/maze_entity.dart';
 import '../../domain/entities/player_prefs_entity.dart';
+import '../../domain/repositories/maze_api_repository.dart';
 import '../../domain/repositories/player_prefs_repository.dart';
 
 part 'game_store.g.dart';
@@ -14,12 +15,15 @@ class GameStore = _GameStoreBase with _$GameStore;
 abstract class _GameStoreBase with Store {
   final PlayerPrefsRepository _prefsRepo;
   final AudioRepository _audioRepo;
+  final MazeApiRepository _mazeApiRepo;
 
   _GameStoreBase({
     required PlayerPrefsRepository prefsRepo,
     required AudioRepository audioRepo,
+    required MazeApiRepository mazeApiRepo,
   }) : _prefsRepo = prefsRepo,
-       _audioRepo = audioRepo;
+       _audioRepo = audioRepo,
+       _mazeApiRepo = mazeApiRepo;
 
   // OBSERVABLES
 
@@ -136,28 +140,29 @@ abstract class _GameStoreBase with Store {
     return biggest;
   }
 
-  /// Calcula a sequência ininterrupta de dias com vitória
+  /// Calcula a sequência ininterrupta de dias com vitória baseada no ID numérico do Maze
   @computed
   int get winStreak {
     if (wonGames.isEmpty) return 0;
 
-    // Pega as datas de vitória e ordena da mais recente para a mais antiga
-    final List<DateTime> dates = wonGames.map((g) => g.maze.date).toList();
+    // A exata mesma data base que você usa no seu MazeApiService
+    final DateTime startDate = DateTime(2026, 3, 23);
+
+    // Converte os IDs numéricos de volta para datas reais
+    final List<DateTime> dates = wonGames.map((g) {
+      final int mazeId = int.parse(g.maze.id);
+      return startDate.add(Duration(days: mazeId - 1));
+    }).toList();
+
+    // Ordena da mais recente para a mais antiga
     dates.sort((a, b) => b.compareTo(a));
 
     int streak = 1;
     for (int i = 0; i < dates.length - 1; i++) {
-      // Truque de mestre: recria o DateTime apenas com Ano, Mês e Dia (zera as horas)
-      final DateTime current = DateTime(
-        dates[i].year,
-        dates[i].month,
-        dates[i].day,
-      );
-      final DateTime previous = DateTime(
-        dates[i + 1].year,
-        dates[i + 1].month,
-        dates[i + 1].day,
-      );
+      // Como a startDate já tem a hora zerada (00:00:00),
+      // somar dias nela garante que current e previous já estejam zerados!
+      final DateTime current = dates[i];
+      final DateTime previous = dates[i + 1];
 
       final int diffInDays = current.difference(previous).inDays;
 
@@ -201,53 +206,49 @@ abstract class _GameStoreBase with Store {
       final List<String> col = line.trim().split(',');
       if (col.length >= 2) {
         listWordsNormalized.add(col[1].toLowerCase());
-        listWordsWellWrote.add(
-          col[0].toLowerCase(),
-        ); // Opcional: pode usar pra formatar bonitinho depois
+        listWordsWellWrote.add(col[0].toLowerCase());
       }
     }
   }
 
   @action
   Future<void> _loadOrCreateTodayGame() async {
-    loadingText = "Baixando tabuleiro...";
+    loadingText = "Baixando tabuleiro do dia...";
 
-    final now = DateTime.now();
-    // Identificador único do dia: Ano-Mês-Dia (ex: "2026-03-23")
-    // Isso garante que cada dia seja único e vire exatamente à meia-noite.
-    final String todayId =
-        "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    try {
+      // 1. Busca o labirinto real do dia na nossa API estática
+      final MazeEntity todayMaze = await _mazeApiRepo.fetchTodayMaze();
 
-    // TODO: Buscar da API ou CSV o Maze correspondente a essa data.
-    // Exemplo temporário:
-    final MazeEntity todayMaze = MazeEntity(
-      id: todayId,
-      maze: "lrarrirnabuvidoaocigaafsatbmotoaagbeerig",
-      date: now,
-    );
-
-    // Procura na lista se já tem um jogo salvo com o ID de hoje
-    final int index = prefsEntity.listGamesPlayed.indexWhere(
-      (g) => g.id == todayMaze.id,
-    );
-
-    if (index != -1) {
-      currentGame = prefsEntity.listGamesPlayed[index];
-    } else {
-      currentGame = GameEntity(
-        id: todayMaze.id,
-        maze: todayMaze,
-        listWordsFound: [],
+      // 2. Procura na lista local se a pessoa já começou a jogar o labirinto de hoje
+      final int index = prefsEntity.listGamesPlayed.indexWhere(
+        (g) => g.id == todayMaze.id,
       );
 
-      final updatedList = List<GameEntity>.from(prefsEntity.listGamesPlayed)
-        ..add(currentGame!);
-      prefsEntity = prefsEntity.copyWith(listGamesPlayed: updatedList);
-      await _prefsRepo.save(prefsEntity);
-    }
+      if (index != -1) {
+        // Já começou hoje, só recupera o progresso de onde parou
+        currentGame = prefsEntity.listGamesPlayed[index];
+      } else {
+        // Primeiro acesso do dia, cria um jogo
+        currentGame = GameEntity(
+          id: todayMaze.id,
+          maze: todayMaze,
+          listWordsFound: [],
+        );
 
-    gridClicked.clear();
-    todayMaze.maze.split('').forEach((_) => gridClicked.add(false));
+        final updatedList = List<GameEntity>.from(prefsEntity.listGamesPlayed)
+          ..add(currentGame!);
+        prefsEntity = prefsEntity.copyWith(listGamesPlayed: updatedList);
+
+        // Salva no cache local
+        await _prefsRepo.save(prefsEntity);
+      }
+
+      // 3. Limpa a seleção e monta o grid na tela com o tamanho exato do labirinto
+      gridClicked.clear();
+      todayMaze.maze.split('').forEach((_) => gridClicked.add(false));
+    } catch (e) {
+      loadingText = "Sem conexão. Verifique a internet e tente novamente.";
+    }
   }
 
   @action

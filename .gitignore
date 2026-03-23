@@ -173,3 +173,5 @@ fastlane/.env
 # Obfuscação
 app.*.symbols
 app.*.map.json
+
+.server

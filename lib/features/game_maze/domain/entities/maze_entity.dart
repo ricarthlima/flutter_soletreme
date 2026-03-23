@@ -8,7 +8,7 @@ abstract class MazeEntity with _$MazeEntity {
   factory MazeEntity({
     required String id,
     required String maze,
-    required DateTime date,
+    @Default([]) List<String> tips,
   }) = _MazeEntity;
 
   factory MazeEntity.fromJson(Map<String, dynamic> json) =>
