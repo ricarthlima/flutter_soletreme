@@ -1,38 +1,45 @@
 # ====================================================
-# FLUTTER / DART
+# MISCELLANEOUS / GERAL
+# ====================================================
+*.class
+*.lock
+*.log
+*.pyc
+*.swp
+*.orig
+*.bak
+*.tmp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# ====================================================
+# FLUTTER / DART / PUB
 # ====================================================
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
+.packages.generated
 .pub-cache/
+.pub-preload-cache/
 .pub/
 build/
 coverage/
 .fvm/flutter_sdk
-
-# Evitar comitar pubspec.lock em pacotes (liberado para apps)
-#pubspec.lock
-
-# Diretórios de documentação gerada
 **/doc/api/
+flutter_*.png
+linked_*.ds
+unlinked.ds
+unlinked_spec.ds
 
-# Build ID do Flutter iOS
-**/ios/Flutter/.last_build_id
-
-# Arquivos e scripts auxiliares
-/lib/_core/private/*
-/lib/_core/private/auth_user.dart
-/lib/estrutura.json
-/lib/dir_to_json.py
-
-# Arquivos de ambiente (.env)
-*.env
-*dotenv.env
-*dotenv
+# Manter pubspec.lock em Apps (recomendado), ignorar em Packages
+# !/pubspec.lock 
 
 # ====================================================
-# FLUTTERFIRE / FIREBASE
+# FIREBASE / FLUTTERFIRE
 # ====================================================
 **/android/app/google-services.json
 **/ios/Runner/GoogleService-Info.plist
@@ -54,19 +61,17 @@ firebase_options_dev.dart
 **/android/local.properties
 **/android/captures/
 **/android/**/GeneratedPluginRegistrant.java
+**/.cxx/
+*.jks
+*.keystore
 
 # Pastas de build por flavor
 /android/app/debug
 /android/app/profile
 /android/app/release
 
-# Keystores e certificados
-*.keystore
-*.jks
-**/android/app/upload-keystore.jks
-
 # ====================================================
-# IOS / XCODE
+# IOS / MACOS / XCODE
 # ====================================================
 **/ios/**/*.mode1v3
 **/ios/**/*.mode2v3
@@ -84,16 +89,22 @@ firebase_options_dev.dart
 **/ios/**/profile
 **/ios/**/xcuserdata
 **/ios/.generated/
+**/ios/Flutter/.last_build_id
 **/ios/Flutter/App.framework
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Flutter.podspec
 **/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral
 **/ios/Flutter/app.flx
 **/ios/Flutter/app.zip
 **/ios/Flutter/flutter_assets/
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS especifico
+**/macos/Flutter/ephemeral
+**/macos/Flutter/GeneratedPluginRegistrant.swift
 
 # Permitir arquivos padrão do Xcode
 !**/ios/**/default.mode1v3
@@ -107,12 +118,27 @@ firebase_options_dev.dart
 *.mobileprovision
 
 # ====================================================
+# WINDOWS / LINUX (Arquivos que você queria remover)
+# ====================================================
+**/windows/flutter/ephemeral/
+**/windows/flutter/generated_plugin_registrant.*
+**/windows/flutter/generated_plugins.cmake
+
+**/linux/flutter/ephemeral/
+**/linux/flutter/generated_plugin_registrant.*
+**/linux/flutter/generated_plugins.cmake
+
+# ====================================================
 # IDEs e FERRAMENTAS
 # ====================================================
-
 # VSCode
-#.vscode/
-.vscode/launch.json
+.vscode/
+!.vscode/launch.json
+!.vscode/settings.json
+.classpath
+.project
+.settings/
+.ccls-cache
 
 # IntelliJ / Android Studio
 *.iml
@@ -121,40 +147,29 @@ firebase_options_dev.dart
 .idea/
 .idea_modules/
 
-# Melos / CLI tooling
+# Melos / Codemagic / Fastlane
 .melos_tool/
-
-# Fastlane
+.codemagic/
 **/fastlane/*.env
 fastlane/.env
 **/fastlane/report.xml
 **/fastlane/Preview.html
 
-# Codemagic
-.codemagic/
+# ====================================================
+# CUSTOMIZAÇÕES E BUILD RUNNER
+# ====================================================
+/lib/_core/private/*
+/lib/estrutura.json
+/lib/dir_to_json.py
 
-# GitHub Actions
-.github/workflows/*.log
+# Arquivos de ambiente (.env)
+*.env
+*dotenv
 
-# ====================================================
-# OBFUSCAÇÃO / SIMBOLICAÇÃO
-# ====================================================
-app.*.symbols
-app.*.map.json
-
-# ====================================================
-# OUTROS (gerais)
-# ====================================================
-*.class
-*.log
-*.pyc
-*.swp
-*.orig
-*.bak
-*.tmp
-
-# ====================================================
-# Arquivos gerados pelo build_runner (Freezed, MobX, etc)
-# ====================================================
+# Build Runner (Freezed, MobX, etc)
 *.g.dart
 *.freezed.dart
+
+# Obfuscação
+app.*.symbols
+app.*.map.json
