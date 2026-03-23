@@ -1,0 +1,72 @@
+analyzer:
+  errors:
+    library_private_types_in_public_api: ignore
+    invalid_annotation_target: ignore
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Garante que campos de uma classe que não são reatribuídos sejam marcados como 'final'.
+    prefer_final_fields: true
+
+    # Garante que variáveis locais que não são reatribuídas sejam marcadas como 'final'.
+    prefer_final_locals: true
+
+    # Incentiva o uso de construtores 'const' sempre que possível, o que melhora a performance.
+    prefer_const_constructors: true
+
+    # Sugere usar literais 'const' (ex: const []) para criar widgets imutáveis.
+    prefer_const_literals_to_create_immutables: true
+
+    # Avisa sobre o uso de 'print()'. Em produção, é melhor usar um logger.
+    avoid_print: true
+
+    # Força o uso de chaves {} em estruturas de controle (if, else, while), mesmo que tenham uma só linha.
+    curly_braces_in_flow_control_structures: true
+
+    # [Específico de Flutter] Move as propriedades 'child' e 'children' para o final da lista de argumentos do widget.
+    sort_child_properties_last: true
+
+    # Detecta 'break' desnecessários (ex: dentro de um switch case que já tem um 'return').
+    unnecessary_breaks: true
+
+    # Detecta usos desnecessários do operador '!' (null check) em variáveis que já são não-nuláveis.
+    unnecessary_null_checks: true
+
+    # Prefere importações relativas (ex: '../models/user.dart') dentro do seu próprio pacote (lib).
+    prefer_relative_imports: true
+
+    # ==========================================================
+    # === SUGESTÕES ADICIONAIS QUE VALEM A PENA ===
+    # ==========================================================
+
+    # [MUITO ÚTIL] Evita reatribuir valores a parâmetros de função. Isso previne bugs e comportamentos inesperados.
+    parameter_assignments: true
+
+    # [BOA PRÁTICA] Prefere usar '.isEmpty' ou '.isNotEmpty' em vez de comparar 'length == 0'. É mais legível.
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+
+    # [ORGANIZAÇÃO] Uma alternativa ao 'prefer_relative_imports'. Força o uso de paths absolutos (ex: 'package:meu_app/models/user.dart').
+    # Isso facilita mover arquivos de lugar sem quebrar as importações. Descomente se preferir (e comente o relative).
+    # prefer_absolute_imports: true
+
+    # [DOCUMENTAÇÃO] Exige que todos os membros públicos (classes, métodos, etc.) tenham comentários de documentação (///).
+    # Pode ser verboso para projetos pequenos, mas é excelente para APIs e trabalho em equipe.
+    # public_member_api_docs: true
+
+    # [Específico de Flutter] Garante que todos os seus Widgets públicos tenham o parâmetro 'Key key' em seus construtores.
+    # Essencial para o Flutter gerenciar a árvore de widgets corretamente.
+    use_key_in_widget_constructors: true
+
+    # [Específico de Flutter] Sugere usar 'SizedBox' em vez de 'Container' quando você só quer adicionar espaço (whitespace).
+    sized_box_for_whitespace: true
+
+    # [Específico de Flutter] Garante que classes anotadas com '@immutable' tenham construtores 'const'.
+    prefer_const_constructors_in_immutables: true
+
+    # [CLEAN CODE] Evita o uso de 'else' após um 'if' que já contém um 'return'.
+    avoid_redundant_argument_values: true
+    
+    # [CLEAN CODE] Detecta ';' sozinhos que não fazem nada.
+    empty_statements: true
