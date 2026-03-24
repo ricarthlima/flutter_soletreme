@@ -1,0 +1,44 @@
+name: Deploy Soletre.me Web
+
+on:
+  push:
+    branches: [ main ] # Toda vez que você der push na main, ele roda
+  pull_request:
+    branches: [ main ] # Tenta buildar sempre que alguém abrir ou atualizar um PR pra main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. Instala o Flutter de forma ultra rápida
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 2. Baixa as dependências
+      - name: Install dependencies
+        run: flutter pub get
+      
+      # 3. Roda os testes
+      - name: Run Tests
+        run: flutter test
+
+      # 4. Faz o Build injetando os segredos do GitHub
+      - name: Build Web
+        run: |
+          flutter build web --release \
+            --dart-define=SECRET_SALT="${{ secrets.SECRET_SALT }}" \
+            --dart-define=API_BASE_URL="${{ secrets.API_BASE_URL }}"
+
+      # 5. Joga a pasta build/web pro Cloudflare Pages (SÓ SE FOR NA MAIN)
+      - name: Deploy to Cloudflare Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build/web --project-name=soletreme
