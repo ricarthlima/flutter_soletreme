@@ -37,6 +37,7 @@ dev_dependencies:
   mobx_codegen: ^2.7.6
   json_serializable: ^6.13.0
   freezed: ^3.2.5
+  mockito: ^5.6.3
   
 
 flutter:
