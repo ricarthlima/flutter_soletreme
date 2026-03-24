@@ -1,12 +1,19 @@
 {
-    "name": "flutter_soletreme",
-    "short_name": "flutter_soletreme",
+    "name": "soletre.me - Ache as palavras todo dia",
+    "short_name": "soletre.me",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#29330e",
+    "theme_color": "#29330e",
+    "description": "Desafie-se diariamente nesse jogo de palavras. Explore o tabuleiro, conecte letras adjacentes e descubra palavras de diferentes tamanhos, de 3 a 7 letras (ou até mais!). Teste suas habilidades linguísticas e divirta-se com o desafio diário.",
     "orientation": "portrait-primary",
+    "categories": [
+        "jogo",
+        "game",
+        "palavras",
+        "words",
+        "termo"
+    ],
     "prefer_related_applications": false,
     "icons": [
         {
