@@ -22,19 +22,23 @@ jobs:
       # 2. Baixa as dependências
       - name: Install dependencies
         run: flutter pub get
+
+      # 3. Gera código
+      - name: Run build_runner (Generate Mocks & Code)
+        run: dart run build_runner build -d
       
-      # 3. Roda os testes
+      # 4. Roda os testes
       - name: Run Tests
         run: flutter test
 
-      # 4. Faz o Build injetando os segredos do GitHub
+      # 5. Faz o Build injetando os segredos do GitHub
       - name: Build Web
         run: |
           flutter build web --release \
             --dart-define=SECRET_SALT="${{ secrets.SECRET_SALT }}" \
             --dart-define=API_BASE_URL="${{ secrets.API_BASE_URL }}"
 
-      # 5. Joga a pasta build/web pro Cloudflare Pages (SÓ SE FOR NA MAIN)
+      # 6. Joga a pasta build/web pro Cloudflare Pages (SÓ SE FOR NA MAIN)
       - name: Deploy to Cloudflare Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
