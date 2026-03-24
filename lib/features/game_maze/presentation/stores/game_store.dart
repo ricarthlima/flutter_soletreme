@@ -140,7 +140,8 @@ abstract class _GameStoreBase with Store {
     return biggest;
   }
 
-  /// Calcula a sequência ininterrupta de dias com vitória baseada no ID numérico do Maze
+  /// Calcula a sequência ininterrupta de dias com vitória baseada
+  /// no ID numérico do Maze calculado pelo [getTodayMazeId]
   @computed
   int get winStreak {
     if (wonGames.isEmpty) return 0;

@@ -32,7 +32,6 @@ class DioMazeApiService implements MazeApiRepository {
 
     try {
       final response = await _dio.get("$_baseUrl/$nomeArquivo");
-      print("$_baseUrl/$nomeArquivo");
       return MazeEntity.fromJson(response.data);
     } catch (e) {
       throw Exception("Erro ao buscar o labirinto do dia: $e");
