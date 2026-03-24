@@ -1,0 +1,75 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../../core/initial_bindings.dart';
+import '../../../../../shared/theme/app_colors.dart';
+import '../../../../about/presentation/ui/dialogs/about_dialog.dart';
+import '../../stores/game_store.dart';
+import '../dialogs/first_time_dialog.dart';
+
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar({super.key});
+
+  @override
+  Size get preferredSize => const Size.fromHeight(48.0);
+
+  @override
+  Widget build(BuildContext context) {
+    final store = DI.instance<GameStore>();
+
+    return AppBar(
+      title: const Text("soletre.me"),
+      centerTitle: true,
+      backgroundColor: AppColors.darkBackground,
+      elevation: 0,
+      toolbarHeight: 48,
+      leading: const SizedBox(),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.help, size: 16),
+          tooltip: "Como jogar?",
+          onPressed: () {
+            showFirstTimeDialog(context);
+          },
+        ),
+        Tooltip(
+          message: "Siga-nos no twitter!",
+          child: InkWell(
+            onTap: () {
+              launchUrl(
+                Uri.parse("https://twitter.com/soletreme"),
+                mode: LaunchMode.externalApplication,
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Image.asset("assets/images/twitter-white.png"),
+            ),
+          ),
+        ),
+        Observer(
+          builder: (_) => IconButton(
+            onPressed: store.toggleSound,
+            tooltip: store.prefsEntity.isSoundActive
+                ? "Ativar som"
+                : "Desativar som",
+            icon: Icon(
+              store.prefsEntity.isSoundActive
+                  ? Icons.music_note_sharp
+                  : Icons.music_off,
+              size: 16,
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            showAboutSoletreMeDialog(context);
+          },
+          tooltip: "Sobre soletre.me",
+          icon: const Icon(Icons.info, size: 16),
+        ),
+      ],
+    );
+  }
+}
